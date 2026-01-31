@@ -19,7 +19,7 @@ st.write("Predict coffee sales using Machine Learning")
 # --------------------------------------------------
 @st.cache_resource
 def load_artifacts():
-    model = joblib.load("coffee_sales_model.pkl")
+    model = joblib.load("model.pkl")
     scaler = joblib.load("scaler.pkl")
     selector = joblib.load("feature_selector.pkl")
     return model, scaler, selector
@@ -76,3 +76,4 @@ if st.button("🚀 Predict Sales"):
 # --------------------------------------------------
 st.markdown("---")
 st.caption("Built with ❤️ using Streamlit")
+
