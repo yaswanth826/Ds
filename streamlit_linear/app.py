@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import joblib
-import os
 
 # --------------------------------------------------
 # Page Configuration
@@ -16,30 +15,13 @@ st.title("☕ Coffee Sales Prediction App")
 st.write("Predict coffee sales using Machine Learning")
 
 # --------------------------------------------------
-# Load Model, Scaler, Feature Selector (Safe Paths)
+# Load Model, Scaler, Feature Selector
 # --------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 @st.cache_resource
 def load_artifacts():
-    model_path = os.path.join(BASE_DIR, "model.pkl")
-    scaler_path = os.path.join(BASE_DIR, "scaler.pkl")
-    selector_path = os.path.join(BASE_DIR, "feature_selector.pkl")
-
-    if not os.path.exists(model_path):
-        st.error("❌ model.pkl not found in repository")
-        st.stop()
-    if not os.path.exists(scaler_path):
-        st.error("❌ scaler.pkl not found in repository")
-        st.stop()
-    if not os.path.exists(selector_path):
-        st.error("❌ feature_selector.pkl not found in repository")
-        st.stop()
-
-    model = joblib.load(model_path)
-    scaler = joblib.load(scaler_path)
-    selector = joblib.load(selector_path)
-
+    model = joblib.load("coffee_sales_model.pkl")
+    scaler = joblib.load("scaler.pkl")
+    selector = joblib.load("feature_selector.pkl")
     return model, scaler, selector
 
 model, scaler, selector = load_artifacts()
@@ -75,9 +57,6 @@ if st.button("🚀 Predict Sales"):
             Promotion_Active
         ]])
 
-        # Debug info (helps if something breaks)
-        st.write("Input shape:", input_data.shape)
-
         # Step 1: Scaling
         scaled_data = scaler.transform(input_data)
 
@@ -90,8 +69,7 @@ if st.button("🚀 Predict Sales"):
         st.success(f"📈 Predicted Coffee Sales: **{prediction[0]:.2f} units**")
 
     except Exception as e:
-        st.error("❌ Something went wrong while predicting.")
-        st.exception(e)
+        st.error(f"❌ Error: {e}")
 
 # --------------------------------------------------
 # Footer
